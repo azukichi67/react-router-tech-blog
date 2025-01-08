@@ -1,0 +1,10 @@
+name: blog
+
+services:
+  frontend:
+    container_name: frontend
+    build: 
+      context: ../
+      target: build
+    environment:
+      NODE_ENV: production

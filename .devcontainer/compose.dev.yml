@@ -1,0 +1,17 @@
+name: blog
+volumes:
+  node-modules:
+
+services:
+  frontend:
+    build: 
+      context: ../
+      target: development
+    ports:
+      - "3000:3000"
+    volumes:
+      - ..:/usr/src/app
+      - node-modules:/usr/src/app/node_modules
+    environment:
+      NODE_ENV: development
+    command: sleep infinity
