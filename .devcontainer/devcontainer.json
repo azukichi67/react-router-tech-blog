@@ -35,6 +35,14 @@
 					"source.fixAll.eslint": "explicit",
 					"source.organizeImports": "explicit"
 				},
+				"[typescript]": {
+					"editor.formatOnSave": true,
+					"editor.defaultFormatter": "esbenp.prettier-vscode"
+				},
+				"[typescriptreact]": {
+					"editor.formatOnSave": true,
+					"editor.defaultFormatter": "esbenp.prettier-vscode"
+				},
 				"explorer.compactFolders": false,
 				"workbench.editor.wrapTabs": true,
 				"typescript.tsserver.experimental.enableProjectDiagnostics": true,
