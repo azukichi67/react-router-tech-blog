@@ -1,3 +1,5 @@
+import { motion } from "framer-motion";
+import BlogCard from "~/components/BlogCard";
 import { Article, type ArticleJson } from "~/domain/article";
 import type { Route } from "./+types/home";
 
@@ -9,11 +11,14 @@ export function meta({}: Route.MetaArgs) {
 }
 
 export async function loader({ params }: Route.LoaderArgs) {
-  const res = await fetch("https://qiita.com/api/v2/authenticated_user/items", {
-    headers: {
-      Authorization: `Bearer [token]`,
-    },
-  });
+  const res = await fetch(
+    "https://qiita.com/api/v2/items?page=1&per_page=20&query=user%3ASicut_study",
+    {
+      headers: {
+        Authorization: `Bearer [token]`,
+      },
+    }
+  );
 
   const articlesJson: ArticleJson[] = await res.json();
   const articles = articlesJson.map(
@@ -27,15 +32,20 @@ export async function loader({ params }: Route.LoaderArgs) {
 export default function Home({ loaderData }: Route.ComponentProps) {
   const { articles } = loaderData;
   return (
-    <div>
-      <div className="flex sm:ml-64">
-        <h1>記事一覧</h1>
-        <div className="container mx-auto px-4 py-8">
+    <div className="flex-1 sm:ml-64">
+      <motion.div
+        initial={{ opacity: 0, y: 20 }}
+        animate={{ opacity: 1, y: 0 }}
+        transition={{ duration: 0.5 }}
+        className="container mx-auto px-4 py-8"
+      >
+        <h2 className="mb-6 text-3xl font-bold text-gray-800">記事一覧</h2>
+        <div className="grid gap-6 sm:grid-cols-2 lg-grid-cols-3">
           {articles.map((x) => (
-            <p key={x.url}>{x.title}</p>
+            <BlogCard key={x.url} article={x} />
           ))}
         </div>
-      </div>
+      </motion.div>
     </div>
   );
 }

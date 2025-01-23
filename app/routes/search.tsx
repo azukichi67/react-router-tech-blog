@@ -1,6 +1,9 @@
 import type { Route } from ".react-router/types/app/routes/+types/search";
+import { motion } from "framer-motion";
+import { SearchIcon } from "lucide-react";
 import { useEffect, useRef } from "react";
 import { useFetcher, useLoaderData } from "react-router";
+import BlogCardWithFavorite from "~/components/BlogCardWithFavorite";
 import { Article, type ArticleJson } from "~/domain/article";
 
 export async function loader({ params }: Route.LoaderArgs) {
@@ -30,9 +33,9 @@ const fetchArticles = async (keyword?: string) => {
   return { articles };
 };
 
-export async function clientAction({ request }: Route.ClientActionArgs) {
+export async function action({ request }: Route.ActionArgs) {
   const formData = await request.formData();
-  const { _action } = Object.fromEntries(formData);
+  const _action = formData.get("_action");
 
   switch (_action) {
     case "search": {
@@ -52,41 +55,51 @@ export async function clientAction({ request }: Route.ClientActionArgs) {
 
 export default function Search() {
   const loader = useLoaderData<LoaderData>();
-  const featcher = useFetcher<LoaderData>();
-  const articles = featcher.data?.articles || loader.articles;
+  const fetcher = useFetcher<LoaderData>();
+  const articles = fetcher.data?.articles || loader.articles;
   const formRef = useRef<HTMLFormElement>(null);
 
   useEffect(() => {
-    if (featcher.state === "idle") {
+    if (fetcher.state === "idle") {
       formRef.current?.reset();
     }
-  }, [featcher.state]);
+  }, [fetcher.state]);
 
   return (
-    <div className="flex sm:ml-64">
-      <div>
-        <featcher.Form method="post" ref={formRef}>
-          <input name="keywords" type="text" />
-          <button type="submit" name="_action" value="search">
-            Submit
+    <div className="flex-1 sm:ml-64">
+      <motion.div
+        initial={{ opacity: 0, y: 20 }}
+        animate={{ opacity: 1, y: 0 }}
+        transition={{ duration: 0.5 }}
+        className="container mx-auto px-4 py-8"
+      >
+        <h2 className="mb-6 text-3xl font-bold text-gray-800">記事を検索</h2>
+        <fetcher.Form method="post" ref={formRef} className="mb-8 flex">
+          <input
+            type="text"
+            name="keywords"
+            placeholder="キーワードを入力..."
+            className="flex-grow rounded-l-lg border border-gray-300 px-4 py-2 focus:border-blue-500 focus:outline-none"
+          />
+          <button
+            type="submit"
+            name="_action"
+            value="search"
+            className="flex items-center rounded-r-lg bg-blue-500 px-4 py-2 text-white transition-colors hover:bg-blue-600"
+          >
+            <SearchIcon className="mr-2 h-5 w-5" />
+            検索
           </button>
-        </featcher.Form>
-      </div>
-      <div>
-        <div>
-          {articles.map((x) => (
-            <div key={x.url}>
-              <p>{x.title}</p>
-              <featcher.Form method="post">
-                <input type="hidden" name="title" value={x.title} />
-                <button type="submit" name="_action" value="like">
-                  ★
-                </button>
-              </featcher.Form>
-            </div>
+        </fetcher.Form>
+
+        <div className="grid gap-6 sm:grid-cols-2 lg:grid-cols-3">
+          {articles.map((article) => (
+            <fetcher.Form method="post" key={article.url}>
+              <BlogCardWithFavorite article={article} />
+            </fetcher.Form>
           ))}
         </div>
-      </div>
+      </motion.div>
     </div>
   );
 }
