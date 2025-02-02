@@ -1,6 +1,6 @@
 import { motion } from "framer-motion";
-import BlogCard from "~/components/BlogCard";
-import { Article, type ArticleJson } from "~/domain/article";
+import BlogCard2 from "~/components/BlogCard2";
+import { getArticles } from "~/lib/newt";
 import type { Route } from "./+types/home";
 
 export function meta({}: Route.MetaArgs) {
@@ -10,22 +10,8 @@ export function meta({}: Route.MetaArgs) {
   ];
 }
 
-export async function loader({ params }: Route.LoaderArgs) {
-  const res = await fetch(
-    "https://qiita.com/api/v2/items?page=1&per_page=20&query=user%3ASicut_study",
-    {
-      headers: {
-        Authorization: `Bearer [token]`,
-      },
-    }
-  );
-
-  const articlesJson: ArticleJson[] = await res.json();
-  const articles = articlesJson.map(
-    (x) =>
-      new Article(x.title, x.url, x.likes_count, x.stocks_count, x.created_at)
-  );
-
+export async function loader({}: Route.LoaderArgs) {
+  const { articles } = await getArticles();
   return { articles };
 }
 
@@ -42,7 +28,7 @@ export default function Home({ loaderData }: Route.ComponentProps) {
         <h2 className="mb-6 text-3xl font-bold text-gray-800">記事一覧</h2>
         <div className="grid gap-6 sm:grid-cols-2 lg-grid-cols-3">
           {articles.map((x) => (
-            <BlogCard key={x.url} article={x} />
+            <BlogCard2 key={x._id} article={x} />
           ))}
         </div>
       </motion.div>

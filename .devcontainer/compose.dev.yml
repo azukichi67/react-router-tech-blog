@@ -12,6 +12,5 @@ services:
     volumes:
       - ..:/usr/src/app
       - node-modules:/usr/src/app/node_modules
-    environment:
-      NODE_ENV: development
+    env_file: devcontainer.env
     command: sleep infinity

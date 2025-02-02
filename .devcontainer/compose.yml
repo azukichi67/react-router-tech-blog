@@ -3,8 +3,6 @@ name: blog
 services:
   frontend:
     container_name: frontend
-    build: 
+    build:
       context: ../
       target: build
-    environment:
-      NODE_ENV: production
