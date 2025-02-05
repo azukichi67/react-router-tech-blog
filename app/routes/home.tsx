@@ -20,7 +20,11 @@ export default function Home({ loaderData }: Route.ComponentProps) {
   return (
     <>
       <Cover />
-      <BlogCard article={articles[0]} />
+      <div className="mt-6 flex flex-col gap-1 items-center">
+        {articles.map((x, i) => {
+          return <BlogCard key={i} article={x} />;
+        })}
+      </div>
     </>
   );
 }

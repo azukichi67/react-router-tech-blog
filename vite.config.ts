@@ -12,6 +12,10 @@ export default defineConfig({
   },
   plugins: [reactRouter(), tsconfigPaths()],
   server: {
-    host: '0.0.0.0'
+    host: "0.0.0.0",
+    watch: {
+      usePolling: true,
+      interval: 1000,
+    },
   },
 });
