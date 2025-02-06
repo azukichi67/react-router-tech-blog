@@ -8,7 +8,10 @@ type Props = {
 
 export default function BlogCard({ article }: Props) {
   return (
-    <Link to="/" className="cursor-pointer w-1/3 hover:shadow-lg">
+    <Link
+      to={`/blog/${article.slug}`}
+      className="cursor-pointer w-1/3 hover:shadow-lg"
+    >
       <div className="flex">
         <div className="p-4 flex flex-col items-start border-b-2 border-gray-100 mt-auto">
           <div className="flex gap-1">

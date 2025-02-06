@@ -33,3 +33,17 @@ export const getArticles = async (query?: GetContentQuery) => {
     total,
   };
 };
+
+export const getArticle = async (slug: string): Promise<Article | null> => {
+  if (!slug) return null;
+
+  const article = await client.getFirstContent<Article>({
+    appUid: process.env.NEWT_APP_UID + "",
+    modelUid: process.env.NEWT_ARTICLE_MODEL_UID + "",
+    query: {
+      depth: 2,
+      slug,
+    },
+  });
+  return article;
+};
